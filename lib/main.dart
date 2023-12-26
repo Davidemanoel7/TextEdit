@@ -21,7 +21,7 @@ class MainApp extends StatelessWidget {
               end: Alignment.bottomCenter
             )
           ),
-          child: const LoginView(),
+          child: LoginView(),
         ),
       )
     );
