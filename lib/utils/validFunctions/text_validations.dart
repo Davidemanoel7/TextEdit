@@ -2,7 +2,7 @@ String validatePass(String? pass) {
 
   if (pass!.isEmpty || pass.length < 2 || pass.length > 20 ){
     return 'A senha deve ter entre 2 e 20 caracteres';
-  } else if (pass.contains(RegExp(r'^[a-zA-Z0-9]+$')) || pass.endsWith(' ')){
+  } else if (!pass.contains(RegExp(r'^[a-zA-Z0-9]+$')) || pass.endsWith(' ')){
     return 'A senha deve ter apenas letras e números';
   }
   return '';
