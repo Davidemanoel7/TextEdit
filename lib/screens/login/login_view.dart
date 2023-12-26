@@ -4,7 +4,9 @@ import 'package:textedit/utils/validFunctions/text_validations.dart';
 import 'package:textedit/widgets/basicInput.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  LoginView({super.key});
+
+  final ValidInput validInput = ValidInput();
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +37,43 @@ class LoginView extends StatelessWidget {
                 validationType: ValidationType.pass,
               ),
             ),
+            validInput.isValid() ?
             Container(
               margin: const EdgeInsets.only( top: 12, bottom: 52),
               child: ElevatedButton(
-                onPressed: () => debugPrint('Clicou'),
+                onPressed: () {
+                  debugPrint('\t -> true \n');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: MyColors.pWhite,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  fixedSize: const Size(156, 42),
+                ),
+                autofocus: true,
+                child: Text(
+                  'Entrar',
+                  style: MyFonts.style.kLabelMedium(context,
+                    color: MyColors.pBlack,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+            )
+            :
+            Container(
+              margin: const EdgeInsets.only( top: 12, bottom: 52),
+              child: ElevatedButton(
+                onPressed: () {
+                  debugPrint('\nfalse\n');
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: MyColors.tGreen,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  fixedSize: const Size(156, 42)
+                  fixedSize: const Size(156, 42),
                 ),
                 child: Text(
                   'Entrar',
@@ -67,3 +96,4 @@ class LoginView extends StatelessWidget {
     );
   }
 }
+
