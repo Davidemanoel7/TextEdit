@@ -23,6 +23,8 @@ class BasicInput extends StatelessWidget {
   final ValidationType validationType;
   final ValidInput validInput = ValidInput();
 
+  final TextEditingController textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,19 +39,27 @@ class BasicInput extends StatelessWidget {
           ),
         ),
         Observer(
-          builder: (_) => TextFormField(
-            style: const TextStyle(
-              backgroundColor: MyColors.pWhite,
-            ),
-            onChanged: validInput.updateIInput,
-            decoration: InputDecoration(
-              prefixIcon: icon,
-              hintText: myHintText,
-              hintStyle: MyFonts.style.kLabelSmall(context, color: const Color.fromARGB(73, 0, 0, 0)),
-              border: UnderlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              fillColor: MyColors.pWhite,
-              filled: true,
-              errorText: validInput.isValid() ? null : validInput.validationMessage(validationType),
+          warnWhenNoObservables: true,
+          builder: (_) => Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: TextFormField(
+              controller: textEditingController,
+              style: const TextStyle(
+                backgroundColor: MyColors.pWhite,
+              ),
+              onChanged: (value) {
+                debugPrint('\n ${validationType.toString()} value => $value\n');
+                validInput.updateIInput(value);
+              },
+              decoration: InputDecoration(
+                prefixIcon: icon,
+                hintText: myHintText,
+                hintStyle: MyFonts.style.kLabelSmall(context, color: const Color.fromARGB(73, 0, 0, 0)),
+                border: UnderlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                fillColor: MyColors.pWhite,
+                filled: true,
+              ),
+              validator: (value) => validInput.isValid() ? '' : validInput.validationMessage(validationType),
             ),
           ),
         ),
@@ -70,9 +80,13 @@ abstract class _ValidInput with Store {
   String validationMessage(ValidationType type) {
     switch(type) {
       case ValidationType.nickname:
-        return validateUser(inputValue);
+        var validUser = validateUser(inputValue);
+        debugPrint('\t => $validUser');
+        return validUser;
       case ValidationType.pass:
-        return validatePass(inputValue);
+        var validPass = validatePass(inputValue);
+        debugPrint('\t => $validPass');
+        return validPass;
       default:
         return '';
     }
@@ -85,6 +99,9 @@ abstract class _ValidInput with Store {
 
   @action
   bool isValid() {
-    return validationMessage(ValidationType.pass).isEmpty;
+    if (validationMessage(ValidationType.pass).isEmpty && validationMessage(ValidationType.nickname).isEmpty) {
+      return true;
+    }
+    return false;
   }
 }
